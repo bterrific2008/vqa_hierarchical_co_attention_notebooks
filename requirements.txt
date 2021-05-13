@@ -1,0 +1,11 @@
+tqdm
+argparse
+opencv-python
+pandas
+matplotlib
+seaborn
+imutils
+numpy
+scikit-learn
+nltk
+tensorflow
