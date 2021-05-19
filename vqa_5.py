@@ -38,7 +38,7 @@ from tqdm import tqdm
 def timer(name):
     t0 = time.time()
     yield
-    print(f'[{name}] done in {time.time() - t0:.0f} s')
+    print(f"[{name}] done in {time.time() - t0:.0f} s")
 
 import tensorflow as tf
 from tensorflow.keras import backend as K
@@ -61,28 +61,30 @@ from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.preprocessing import image, sequence, text
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.utils import Sequence, plot_model
+import tensorflow_addons as tfa
+from tensorflow_addons.metrics import F1Score
 
 from vqa_util.vqa_model import build_model
 
 print("Load Questions and Image Training Data")
-with open('/content/drive/My Drive/Capstone/VQA 2/processed_data/vqa_raw_train2014_top1000.json', 'rb') as f:
+with open('preprocessed_data/vqa_raw_train2014_top1000.json', 'rb') as f:
     questions_train, answer_train, answers_train, images_train = joblib.load(f)
 
-with open('/content/drive/My Drive/Capstone/VQA 2/processed_data/vqa_raw_val2014_top1000.json', 'rb') as f:
+with open('preprocessed_data/vqa_raw_val2014_top1000.json', 'rb') as f:
     questions_val, answer_val, answers_val, images_val = joblib.load(f)
 
 print("Load Text Tokenizers and Encoders")
-tok = text.Tokenizers(filters='')
+tok = text.Tokenizer(filters='')
 # load from disk
-with open('./something.pkl', 'rb') as f:
+with open('vqa_objects/text_tokenizer.pkl', 'rb') as f:
     tok = joblib.load(f)
 
 # load from disk
-with open('./something.pkl', mode='rb') as f:
+with open('vqa_objects/tokenised_data_post.pkl', mode='rb') as f:
     question_data_train, question_data_val = pickle.load(f)
 
 # load from disk
-with open('./something.pkl', 'rb') as f:
+with open('vqa_objects/labelencoder.pkl', 'rb') as f:
     labelencoder = joblib.load(f)
 
 def get_answers_matrix(answers, encoder):
@@ -291,3 +293,4 @@ for epoch in range(START_EPOCH, EPOCHS):
         manager.save()
         print('Saved checkpoint.')
 
+model.save('hierarchical_vqa_model')
